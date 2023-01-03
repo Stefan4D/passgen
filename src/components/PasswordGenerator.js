@@ -68,6 +68,10 @@ export default function PasswordGenerator() {
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
+    console.log({ includeCaps });
+    console.log({ includeLower });
+    console.log({ includeNumbers });
+    console.log({ includeSpecial });
     generatePassword(
       includeCaps,
       includeLower,
@@ -106,32 +110,32 @@ export default function PasswordGenerator() {
               type="checkbox"
               name="caps"
               id="caps"
-              checked
-              onChange={(e) => setIncludeCaps(e.target.value)}
+              defaultChecked
+              onChange={(e) => setIncludeCaps(e.target.checked)}
             />
             <label htmlFor="lower">Lowercase Letters</label>
             <input
               type="checkbox"
               name="lower"
               id="lower"
-              checked
-              onChange={(e) => setIncludeLower(e.target.value)}
+              defaultChecked
+              onChange={(e) => setIncludeLower(e.target.checked)}
             />
             <label htmlFor="nums">Numbers</label>
             <input
               type="checkbox"
               name="nums"
               id="nums"
-              checked
-              onChange={(e) => setIncludeNumbers(e.target.value)}
+              defaultChecked
+              onChange={(e) => setIncludeNumbers(e.target.checked)}
             />
             <label htmlFor="special">Special Characters</label>
             <input
               type="checkbox"
               name="special"
               id="special"
-              checked
-              onChange={(e) => setIncludeSpecial(e.target.value)}
+              defaultChecked
+              onChange={(e) => setIncludeSpecial(e.target.checked)}
             />
           </fieldset>
         </form>
