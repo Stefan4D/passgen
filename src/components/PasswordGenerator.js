@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./PasswordGenerator.css";
 import { longList } from "../data/eff_large_wordlist"; // 5 dice rolls
 import { shortList } from "../data/eff_short_wordlist_1"; // 4 dice rolls
 import { shortUniqueList } from "../data/eff_short_wordlist_2_0"; // 4 dice rolls
 
 export default function PasswordGenerator() {
-  const [numDice, setNumDice] = useState(5);
+  // Password
   const [includeCaps, setIncludeCaps] = useState(true);
   const [includeLower, setIncludeLower] = useState(true);
   const [includeNumbers, setIncludeNumbers] = useState(true);
   const [includeSpecial, setIncludeSpecial] = useState(true);
   const [passwordLength, setPasswordLength] = useState(16);
+  const [password, setPassword] = useState("default");
+  //Passphrase
   const [passphraseNumWords, setPassphraseNumWords] = useState(5);
+  const [numDice, setNumDice] = useState(5);
   const [passphraseSeparator, setPassphraseSeparator] = useState("-");
   const [wordList, setWordList] = useState();
-  const [password, setPassword] = useState("default");
   const [passphrase, setPassphrase] = useState("default");
 
   function rollDice(numDice) {
@@ -55,23 +57,34 @@ export default function PasswordGenerator() {
     }
 
     setPassword(passString);
-
-    // const passwordOutput = document.getElementById("password-output");
-    // passwordOutput.innerText = password;
-
-    // return password;
   }
 
+  function generatePassphrase(
+    passphraseNumWords,
+    numDice,
+    passphraseSeparator,
+    wordList = longList
+  ) {
+    let passphraseString = "";
+
+    for (let i = 0; i < passphraseNumWords; i++) {
+      let index = rollDice(numDice);
+      passphraseString += wordList[index];
+      if (i === passphraseNumWords - 1) {
+        setPassphrase(passphraseString);
+        return;
+      }
+      passphraseString += passphraseSeparator;
+    }
+  }
+
+  // Testing only
   const key = rollDice(numDice);
   console.log(key); // prints a random 5-digit string
   console.log(longList[key]);
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
-    console.log({ includeCaps });
-    console.log({ includeLower });
-    console.log({ includeNumbers });
-    console.log({ includeSpecial });
     generatePassword(
       includeCaps,
       includeLower,
@@ -83,7 +96,44 @@ export default function PasswordGenerator() {
 
   const handlePassphraseSubmit = (e) => {
     e.preventDefault();
+    generatePassphrase(
+      passphraseNumWords,
+      numDice,
+      passphraseSeparator,
+      wordList
+    );
   };
+
+  // use a useEffect to monitor changes to password inputs and update password
+  // dependency array of all inputs
+
+  useEffect(() => {
+    generatePassword(
+      includeCaps,
+      includeLower,
+      includeNumbers,
+      includeSpecial,
+      passwordLength
+    );
+  }, [
+    includeCaps,
+    includeLower,
+    includeNumbers,
+    includeSpecial,
+    passwordLength,
+  ]);
+
+  // use a useEffect to monitor changes to passphrase inputs and update passphrase
+  // dependency array of all inputs
+
+  useEffect(() => {
+    generatePassphrase(
+      passphraseNumWords,
+      numDice,
+      passphraseSeparator,
+      wordList
+    );
+  }, [passphraseNumWords, numDice, passphraseSeparator, wordList]);
 
   return (
     <div id="generator-container">
@@ -140,7 +190,7 @@ export default function PasswordGenerator() {
           </fieldset>
         </form>
       </div>
-
+      <br />
       <div className="passphrasegen app-block">
         <form onSubmit={handlePassphraseSubmit}>
           <div className="passphrase-output" id="passphrase-output">
@@ -157,16 +207,39 @@ export default function PasswordGenerator() {
             onChange={(e) => setPassphraseNumWords(e.target.value)}
           />
           <span>{passphraseNumWords} words</span>
-          <fieldset onChange={(e) => setNumDice(e.target.value)}>
+          <fieldset>
             <legend>Select number of dice:</legend>
 
             <div>
-              <input type="radio" id="four-dice" name="num-dice" value="4" />
+              <input
+                type="radio"
+                id="four-dice"
+                name="num-dice"
+                value="4"
+                onChange={(e) => setNumDice(e.target.value)}
+              />
               <label htmlFor="four-dice">4 dice</label>
             </div>
 
             <div>
-              <input type="radio" id="five-dice" name="num-dice" value="5" />
+              <input
+                type="radio"
+                id="four-dice"
+                name="num-dice"
+                value="4"
+                onChange={(e) => setNumDice(e.target.value)}
+              />
+              <label htmlFor="four-dice">4 dice (simple)</label>
+            </div>
+
+            <div>
+              <input
+                type="radio"
+                id="five-dice"
+                name="num-dice"
+                value="5"
+                onChange={(e) => setNumDice(e.target.value)}
+              />
               <label htmlFor="five-dice">5 dice</label>
             </div>
           </fieldset>
@@ -176,10 +249,10 @@ export default function PasswordGenerator() {
             type="text"
             name="separator"
             id="passphrase-separator"
-            value="-"
+            defaultValue="-"
+            maxLength={2}
             onChange={(e) => setPassphraseSeparator(e.target.value)}
           />
-          <button>Generate Passphrase</button>
         </form>
       </div>
     </div>
