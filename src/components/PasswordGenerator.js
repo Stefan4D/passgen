@@ -11,12 +11,15 @@ export default function PasswordGenerator() {
   const [includeNumbers, setIncludeNumbers] = useState(true);
   const [includeSpecial, setIncludeSpecial] = useState(true);
   const [passwordLength, setPasswordLength] = useState(16);
+  const [passwordEntropy, setPasswordEntropy] = useState();
   const [password, setPassword] = useState("default");
   //Passphrase
   const [passphraseNumWords, setPassphraseNumWords] = useState(5);
   const [numDice, setNumDice] = useState(5);
   const [passphraseSeparator, setPassphraseSeparator] = useState("-");
   const [wordList, setWordList] = useState();
+  const [passphraseIncludeNums, setPassphraseIncludeNums] = useState(false);
+  const [passphraseIncludeCaps, setPassphraseIncludeCaps] = useState(false);
   const [passphrase, setPassphrase] = useState("default");
 
   function rollDice(numDice) {
@@ -27,6 +30,7 @@ export default function PasswordGenerator() {
     return rolls;
   }
 
+  // does not currently GUARANTEE there will be one of each selected, it just adds them to the character pool
   function generatePassword(
     includeCaps,
     includeLower,
@@ -78,10 +82,44 @@ export default function PasswordGenerator() {
     }
   }
 
+  function calculateEntropy(password) {
+    // Initialize entropy to 0
+    let entropy = 0;
+
+    // Check if the password contains upper case letters
+    const upperCase = /[A-Z]/;
+    if (upperCase.test(password)) {
+      entropy += 26;
+    }
+
+    // Check if the password contains lower case letters
+    const lowerCase = /[a-z]/;
+    if (lowerCase.test(password)) {
+      entropy += 26;
+    }
+
+    // Check if the password contains numbers
+    const numbers = /[0-9]/;
+    if (numbers.test(password)) {
+      entropy += 10;
+    }
+
+    // Check if the password contains special characters
+    const special = /[!@#$%^&*()_+-=\[\]{};':"\\|,.<>\/?]/;
+    if (special.test(password)) {
+      entropy += 33;
+    }
+
+    // Calculate the entropy of the password
+    entropy = Math.log2(Math.pow(entropy, password.length));
+
+    return entropy;
+  }
+
   // Testing only
-  const key = rollDice(numDice);
-  console.log(key); // prints a random 5-digit string
-  console.log(longList[key]);
+  //   const key = rollDice(numDice);
+  //   console.log(key); // prints a random 5-digit string
+  //   console.log(longList[key]);
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
@@ -123,6 +161,11 @@ export default function PasswordGenerator() {
     passwordLength,
   ]);
 
+  // does this need to be a separate useEffect?
+  useEffect(() => {
+    setPasswordEntropy(calculateEntropy(password));
+  }, [password]);
+
   // use a useEffect to monitor changes to passphrase inputs and update passphrase
   // dependency array of all inputs
 
@@ -142,6 +185,7 @@ export default function PasswordGenerator() {
           <div className="password-output" id="password-output">
             {password}
           </div>
+          <div className="entropy">{passwordEntropy}</div>
           <button>Generate Password</button>
           <label htmlFor="password-length">Password Length</label>
           <input
@@ -216,9 +260,12 @@ export default function PasswordGenerator() {
                 id="four-dice"
                 name="num-dice"
                 value="4"
-                onChange={(e) => setNumDice(e.target.value)}
+                onChange={(e) => {
+                  setNumDice(e.target.value);
+                  setWordList(shortList);
+                }}
               />
-              <label htmlFor="four-dice">4 dice</label>
+              <label htmlFor="four-dice">4 dice (simple)</label>
             </div>
 
             <div>
@@ -227,9 +274,12 @@ export default function PasswordGenerator() {
                 id="four-dice"
                 name="num-dice"
                 value="4"
-                onChange={(e) => setNumDice(e.target.value)}
+                onChange={(e) => {
+                  setNumDice(e.target.value);
+                  setWordList(shortUniqueList);
+                }}
               />
-              <label htmlFor="four-dice">4 dice (simple)</label>
+              <label htmlFor="four-dice">4 dice</label>
             </div>
 
             <div>
@@ -238,7 +288,11 @@ export default function PasswordGenerator() {
                 id="five-dice"
                 name="num-dice"
                 value="5"
-                onChange={(e) => setNumDice(e.target.value)}
+                defaultChecked
+                onChange={(e) => {
+                  setNumDice(e.target.value);
+                  setWordList(longList);
+                }}
               />
               <label htmlFor="five-dice">5 dice</label>
             </div>
