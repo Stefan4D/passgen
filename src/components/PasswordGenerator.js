@@ -15,6 +15,7 @@ import {
   ViewIcon,
   ViewOffIcon,
   WarningTwoIcon,
+  StarIcon,
 } from "@chakra-ui/icons";
 import {
   Textarea,
@@ -42,6 +43,16 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderMark,
+  Flex,
+  Tooltip,
+  Center,
+  Grid,
+  GridItem,
+  HStack,
+  Card,
+  CardBody,
+  Spacer,
+  VStack,
 } from "@chakra-ui/react";
 
 export default function PasswordGenerator() {
@@ -219,231 +230,348 @@ export default function PasswordGenerator() {
   }, [passphraseNumWords, numDice, passphraseSeparator, wordList]);
 
   return (
-    <div id="generator-container">
-      <Tabs>
-        <TabList>
-          <Tab>Password</Tab>
-          <Tab>Passphrase</Tab>
-        </TabList>
+    <Center>
+      <div id="generator-container">
+        <Card>
+          <CardBody>
+            <Tabs>
+              <TabList>
+                <Tab>Password</Tab>
+                <Tooltip label="New!" placement="end" isOpen>
+                  <Tab>
+                    Passphrase &nbsp; <StarIcon />
+                  </Tab>
+                </Tooltip>
+              </TabList>
 
-        <TabPanels>
-          <TabPanel>
-            <div className="passgen app-block">
-              <form onSubmit={handlePasswordSubmit}>
-                <div className="password-output" id="password-output">
-                  {password}
-                </div>
-                <div className="entropy">{passwordEntropy}</div>
-                <Button onClick={handlePasswordSubmit}>
-                  Generate Password
-                </Button>
-                <label htmlFor="password-length">Password Length</label>
-                <input
-                  id="password-length"
-                  type="range"
-                  min="5"
-                  max="99"
-                  defaultValue="16"
-                  onChange={(e) => setPasswordLength(e.target.value)}
-                />
-                <span>{passwordLength}</span>
-
-                <Accordion allowToggle>
-                  <AccordionItem>
-                    <h2>
-                      <AccordionButton>
-                        <Box as="span" flex="1" textAlign="left">
-                          Advanced Options
-                        </Box>
-                        <AccordionIcon />
-                      </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>
-                      <fieldset>
-                        <legend>Character options:</legend>
-                        <label htmlFor="caps">Uppercase Letters</label>
-                        <input
-                          type="checkbox"
-                          name="caps"
-                          id="caps"
-                          defaultChecked
-                          onChange={(e) => setIncludeCaps(e.target.checked)}
-                        />
-                        <label htmlFor="lower">Lowercase Letters</label>
-                        <input
-                          type="checkbox"
-                          name="lower"
-                          id="lower"
-                          defaultChecked
-                          onChange={(e) => setIncludeLower(e.target.checked)}
-                        />
-                        <label htmlFor="nums">Numbers</label>
-                        <input
-                          type="checkbox"
-                          name="nums"
-                          id="nums"
-                          defaultChecked
-                          onChange={(e) => setIncludeNumbers(e.target.checked)}
-                        />
-                        <label htmlFor="special">Special Characters</label>
-                        <input
-                          type="checkbox"
-                          name="special"
-                          id="special"
-                          defaultChecked
-                          onChange={(e) => setIncludeSpecial(e.target.checked)}
-                        />
-                      </fieldset>
-                    </AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              </form>
-            </div>
-          </TabPanel>
-
-          <TabPanel>
-            <div className="passphrasegen app-block">
-              <form onSubmit={handlePassphraseSubmit}>
-                <div className="passphrase-output" id="passphrase-output">
-                  {passphrase}
-                </div>
-                <Button onClick={handlePassphraseSubmit}>
-                  Generate Passphrase
-                </Button>
-                <label htmlFor="passphrase-length">Passphrase Length</label>
-                <input
-                  id="passphrase-length"
-                  type="range"
-                  min="3"
-                  max="32"
-                  defaultValue="5"
-                  onChange={(e) => setPassphraseNumWords(e.target.value)}
-                />
-                <span>{passphraseNumWords} words</span>
-
-                <Accordion allowToggle>
-                  <AccordionItem>
-                    <h2>
-                      <AccordionButton>
-                        <Box as="span" flex="1" textAlign="left">
-                          Advanced Options
-                        </Box>
-                        <AccordionIcon />
-                      </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>
-                      <fieldset>
-                        <legend>Select number of dice:</legend>
-
-                        <div>
-                          <input
-                            type="radio"
-                            id="four-dice"
-                            name="num-dice"
-                            value="4"
-                            onChange={(e) => {
-                              setNumDice(e.target.value);
-                              setWordList(shortList);
-                            }}
-                          />
-                          <label htmlFor="four-dice">4 dice (simple)</label>
-                        </div>
-
-                        <div>
-                          <input
-                            type="radio"
-                            id="four-dice"
-                            name="num-dice"
-                            value="4"
-                            onChange={(e) => {
-                              setNumDice(e.target.value);
-                              setWordList(shortUniqueList);
-                            }}
-                          />
-                          <label htmlFor="four-dice">4 dice</label>
-                        </div>
-
-                        <div>
-                          <input
-                            type="radio"
-                            id="five-dice"
-                            name="num-dice"
-                            value="5"
-                            defaultChecked
-                            onChange={(e) => {
-                              setNumDice(e.target.value);
-                              setWordList(longList);
-                            }}
-                          />
-                          <label htmlFor="five-dice">5 dice</label>
-                        </div>
-                      </fieldset>
-
-                      <FormControl display="flex" alignItems="center">
-                        <FormLabel htmlFor="passphrase-separator" mb="0">
-                          Passphrase Separator
-                        </FormLabel>
+              <TabPanels>
+                <TabPanel>
+                  <div className="passgen app-block">
+                    <form onSubmit={handlePasswordSubmit}>
+                      {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
+                      <InputGroup size="lg">
+                        <InputLeftAddon children={<LockIcon />} />
                         <Input
-                          type="text"
-                          name="separator"
-                          id="passphrase-separator"
-                          defaultValue="-"
-                          maxLength={2}
-                          width={20}
-                          onChange={(e) =>
-                            setPassphraseSeparator(e.target.value)
+                          minW={450}
+                          maxW={600}
+                          value={password}
+                          readOnly
+                          id="password-output"
+                        />
+                        <Tooltip label="Copy" placement="top">
+                          <InputRightAddon
+                            children={
+                              <Tooltip
+                                label="Copy"
+                                aria-label="Copy password"
+                                placement="right-end"
+                              >
+                                <CopyIcon
+                                  onClick={() => {
+                                    let copyText =
+                                      document.getElementById(
+                                        "password-output"
+                                      );
+                                    copyText.select();
+                                    copyText.setSelectionRange(0, 99999);
+                                    navigator.clipboard.writeText(
+                                      copyText.value
+                                    );
+                                  }}
+                                />
+                              </Tooltip>
+                            }
+                          />
+                        </Tooltip>
+                      </InputGroup>
+
+                      <Center>
+                        <VStack>
+                          <div className="entropy">{passwordEntropy}</div>
+
+                          <HStack>
+                            <label htmlFor="password-length">
+                              Password Length
+                            </label>
+                            <input
+                              id="password-length"
+                              type="range"
+                              min="5"
+                              max="99"
+                              defaultValue="16"
+                              onChange={(e) =>
+                                setPasswordLength(e.target.value)
+                              }
+                            />
+                            <span>{passwordLength}</span>
+                          </HStack>
+                          <Button onClick={handlePasswordSubmit}>
+                            Generate Password
+                          </Button>
+
+                          <Accordion allowToggle minW={650}>
+                            <AccordionItem>
+                              <h2>
+                                <AccordionButton>
+                                  <Box as="span" flex="1" textAlign="left">
+                                    Advanced Options
+                                  </Box>
+                                  <AccordionIcon />
+                                </AccordionButton>
+                              </h2>
+                              <AccordionPanel pb={4}>
+                                <fieldset>
+                                  <legend>Character options:</legend>
+                                  <Grid
+                                    templateColumns="repeat(4, 1fr)"
+                                    gap={6}
+                                  >
+                                    <label htmlFor="caps">
+                                      Uppercase Letters
+                                    </label>
+                                    <input
+                                      type="checkbox"
+                                      name="caps"
+                                      id="caps"
+                                      defaultChecked
+                                      onChange={(e) =>
+                                        setIncludeCaps(e.target.checked)
+                                      }
+                                    />
+
+                                    <label htmlFor="lower">
+                                      Lowercase Letters
+                                    </label>
+                                    <input
+                                      type="checkbox"
+                                      name="lower"
+                                      id="lower"
+                                      defaultChecked
+                                      onChange={(e) =>
+                                        setIncludeLower(e.target.checked)
+                                      }
+                                    />
+
+                                    <label htmlFor="nums">Numbers</label>
+                                    <input
+                                      type="checkbox"
+                                      name="nums"
+                                      id="nums"
+                                      defaultChecked
+                                      onChange={(e) =>
+                                        setIncludeNumbers(e.target.checked)
+                                      }
+                                    />
+
+                                    <label htmlFor="special">
+                                      Special Characters
+                                    </label>
+                                    <input
+                                      type="checkbox"
+                                      name="special"
+                                      id="special"
+                                      defaultChecked
+                                      onChange={(e) =>
+                                        setIncludeSpecial(e.target.checked)
+                                      }
+                                    />
+                                  </Grid>
+                                </fieldset>
+                              </AccordionPanel>
+                            </AccordionItem>
+                          </Accordion>
+                        </VStack>
+                      </Center>
+                    </form>
+                  </div>
+                </TabPanel>
+
+                <TabPanel>
+                  <div className="passphrasegen app-block">
+                    <form onSubmit={handlePassphraseSubmit}>
+                      <InputGroup size="lg">
+                        <InputLeftAddon children={<LockIcon />} />
+                        <Input
+                          minW={450}
+                          maxW={600}
+                          value={passphrase}
+                          readOnly
+                          id="passphrase-output"
+                        />
+                        <InputRightAddon
+                          children={
+                            <Tooltip
+                              label="Copy"
+                              aria-label="Copy password"
+                              placement="right-end"
+                            >
+                              <CopyIcon
+                                onClick={() => {
+                                  let copyText =
+                                    document.getElementById(
+                                      "passphrase-output"
+                                    );
+                                  copyText.select();
+                                  copyText.setSelectionRange(0, 99999);
+                                  navigator.clipboard.writeText(copyText.value);
+                                }}
+                              />
+                            </Tooltip>
                           }
                         />
-                      </FormControl>
-                    </AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              </form>
-            </div>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+                      </InputGroup>
 
-      <Textarea placeholder={passphrase} size="lg" />
-      <Button colorScheme="blue">Button</Button>
-      <CopyIcon boxSize={6} />
-      <RepeatIcon boxSize={6} />
-      <InfoIcon boxSize={6} />
-      <ChatIcon boxSize={6} />
-      <LockIcon boxSize={6} />
-      <SettingsIcon boxSize={6} />
-      <ViewIcon boxSize={6} />
-      <ViewOffIcon boxSize={6} />
-      <WarningTwoIcon boxSize={6} />
+                      {/* <Textarea placeholder={passphrase} size="lg" /> */}
 
-      {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
-      <InputGroup size="lg">
-        <InputLeftAddon children={<LockIcon />} />
-        <Input value={password} readOnly />
-        <InputRightAddon children={<CopyIcon />} />
-      </InputGroup>
+                      <Center>
+                        <VStack>
+                          <HStack>
+                            <label htmlFor="passphrase-length">
+                              Passphrase Length
+                            </label>
+                            <input
+                              id="passphrase-length"
+                              type="range"
+                              min="3"
+                              max="32"
+                              defaultValue="5"
+                              onChange={(e) =>
+                                setPassphraseNumWords(e.target.value)
+                              }
+                            />
+                            <span>{passphraseNumWords} words</span>
+                          </HStack>
+                          <Button onClick={handlePassphraseSubmit}>
+                            Generate Passphrase
+                          </Button>
+                        </VStack>
+                      </Center>
 
-      <FormControl display="flex" alignItems="center">
-        <FormLabel htmlFor="email-alerts" mb="0">
-          Enable email alerts?
-        </FormLabel>
-        <Switch id="email-alerts" defaultChecked />
-      </FormControl>
+                      <Accordion allowToggle>
+                        <AccordionItem>
+                          <h2>
+                            <AccordionButton>
+                              <Box as="span" flex="1" textAlign="left">
+                                Advanced Options
+                              </Box>
+                              <AccordionIcon />
+                            </AccordionButton>
+                          </h2>
+                          <AccordionPanel pb={4}>
+                            <fieldset>
+                              <legend>Select number of dice:</legend>
 
-      <Slider
-        aria-label="password-length"
-        id="password-length"
-        defaultValue={16}
-        min={5}
-        max={99}
-        step={1}
-      >
-        <SliderTrack bg="red.100">
-          <Box position="relative" right={10} />
-          <SliderFilledTrack bg="tomato" />
-        </SliderTrack>
-        <SliderThumb boxSize={6} />
-      </Slider>
-    </div>
+                              <div>
+                                <input
+                                  type="radio"
+                                  id="four-dice"
+                                  name="num-dice"
+                                  value="4"
+                                  onChange={(e) => {
+                                    setNumDice(e.target.value);
+                                    setWordList(shortList);
+                                  }}
+                                />
+                                <label htmlFor="four-dice">
+                                  4 dice (simple)
+                                </label>
+                              </div>
+
+                              <div>
+                                <input
+                                  type="radio"
+                                  id="four-dice"
+                                  name="num-dice"
+                                  value="4"
+                                  onChange={(e) => {
+                                    setNumDice(e.target.value);
+                                    setWordList(shortUniqueList);
+                                  }}
+                                />
+                                <label htmlFor="four-dice">4 dice</label>
+                              </div>
+
+                              <div>
+                                <input
+                                  type="radio"
+                                  id="five-dice"
+                                  name="num-dice"
+                                  value="5"
+                                  defaultChecked
+                                  onChange={(e) => {
+                                    setNumDice(e.target.value);
+                                    setWordList(longList);
+                                  }}
+                                />
+                                <label htmlFor="five-dice">5 dice</label>
+                              </div>
+                            </fieldset>
+
+                            <FormControl display="flex" alignItems="center">
+                              <FormLabel htmlFor="passphrase-separator" mb="0">
+                                Passphrase Separator
+                              </FormLabel>
+                              <Input
+                                type="text"
+                                name="separator"
+                                id="passphrase-separator"
+                                defaultValue="-"
+                                maxLength={2}
+                                htmlSize={2}
+                                width="auto"
+                                onChange={(e) =>
+                                  setPassphraseSeparator(e.target.value)
+                                }
+                              />
+                            </FormControl>
+                          </AccordionPanel>
+                        </AccordionItem>
+                      </Accordion>
+                    </form>
+                  </div>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </CardBody>
+        </Card>
+
+        {/* delete below here*/}
+        <Spacer h={10} />
+
+        {/* 
+        <Button colorScheme="blue">Button</Button>
+        <CopyIcon boxSize={6} />
+        <RepeatIcon boxSize={6} />
+        <InfoIcon boxSize={6} />
+        <ChatIcon boxSize={6} />
+        <LockIcon boxSize={6} />
+        <SettingsIcon boxSize={6} />
+        <ViewIcon boxSize={6} />
+        <ViewOffIcon boxSize={6} />
+        <WarningTwoIcon boxSize={6} />
+
+        <FormControl display="flex" alignItems="center">
+          <FormLabel htmlFor="email-alerts" mb="0">
+            Enable email alerts?
+          </FormLabel>
+          <Switch id="email-alerts" defaultChecked />
+        </FormControl>
+        <Slider
+          aria-label="password-length"
+          id="password-length"
+          defaultValue={16}
+          min={5}
+          max={99}
+          step={1}
+        >
+          <SliderTrack bg="red.100">
+            <Box position="relative" right={10} />
+            <SliderFilledTrack bg="tomato" />
+          </SliderTrack>
+          <SliderThumb boxSize={6} />
+        </Slider>
+        */}
+      </div>
+    </Center>
   );
 }
