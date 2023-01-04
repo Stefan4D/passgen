@@ -444,89 +444,106 @@ export default function PasswordGenerator() {
                           <Button onClick={handlePassphraseSubmit}>
                             Generate Passphrase
                           </Button>
+
+                          <Accordion allowToggle minW={650}>
+                            <AccordionItem>
+                              <h2>
+                                <AccordionButton>
+                                  <Box as="span" flex="1" textAlign="left">
+                                    Advanced Options
+                                  </Box>
+                                  <AccordionIcon />
+                                </AccordionButton>
+                              </h2>
+                              <AccordionPanel pb={4}>
+                                <Center>
+                                  <VStack>
+                                    <fieldset>
+                                      <legend>Select number of dice:</legend>
+                                      <HStack>
+                                        <div>
+                                          <input
+                                            type="radio"
+                                            id="four-dice"
+                                            name="num-dice"
+                                            value="4"
+                                            onChange={(e) => {
+                                              setNumDice(e.target.value);
+                                              setWordList(shortList);
+                                            }}
+                                          />
+                                          <label htmlFor="four-dice">
+                                            4 dice (simple)
+                                          </label>
+                                        </div>
+
+                                        <div>
+                                          <input
+                                            type="radio"
+                                            id="four-dice"
+                                            name="num-dice"
+                                            value="4"
+                                            onChange={(e) => {
+                                              setNumDice(e.target.value);
+                                              setWordList(shortUniqueList);
+                                            }}
+                                          />
+                                          <label htmlFor="four-dice">
+                                            4 dice
+                                          </label>
+                                        </div>
+
+                                        <div>
+                                          <input
+                                            type="radio"
+                                            id="five-dice"
+                                            name="num-dice"
+                                            value="5"
+                                            defaultChecked
+                                            onChange={(e) => {
+                                              setNumDice(e.target.value);
+                                              setWordList(longList);
+                                            }}
+                                          />
+                                          <label htmlFor="five-dice">
+                                            5 dice
+                                          </label>
+                                        </div>
+                                      </HStack>
+                                    </fieldset>
+                                    <FormControl
+                                      display="flex"
+                                      alignItems="center"
+                                    >
+                                      <FormLabel
+                                        htmlFor="passphrase-separator"
+                                        mb="0"
+                                      >
+                                        Passphrase Separator
+                                      </FormLabel>
+                                      <Input
+                                        type="text"
+                                        name="separator"
+                                        id="passphrase-separator"
+                                        defaultValue="-"
+                                        maxLength={2}
+                                        htmlSize={2}
+                                        width="auto"
+                                        onChange={(e) =>
+                                          setPassphraseSeparator(e.target.value)
+                                        }
+                                      />
+                                    </FormControl>
+                                    <div>
+                                      Add capital letters <br /> Add numbers
+                                    </div>
+                                  </VStack>
+                                </Center>
+                              </AccordionPanel>
+                            </AccordionItem>
+                          </Accordion>
                         </VStack>
                       </Center>
-
-                      <Accordion allowToggle>
-                        <AccordionItem>
-                          <h2>
-                            <AccordionButton>
-                              <Box as="span" flex="1" textAlign="left">
-                                Advanced Options
-                              </Box>
-                              <AccordionIcon />
-                            </AccordionButton>
-                          </h2>
-                          <AccordionPanel pb={4}>
-                            <fieldset>
-                              <legend>Select number of dice:</legend>
-
-                              <div>
-                                <input
-                                  type="radio"
-                                  id="four-dice"
-                                  name="num-dice"
-                                  value="4"
-                                  onChange={(e) => {
-                                    setNumDice(e.target.value);
-                                    setWordList(shortList);
-                                  }}
-                                />
-                                <label htmlFor="four-dice">
-                                  4 dice (simple)
-                                </label>
-                              </div>
-
-                              <div>
-                                <input
-                                  type="radio"
-                                  id="four-dice"
-                                  name="num-dice"
-                                  value="4"
-                                  onChange={(e) => {
-                                    setNumDice(e.target.value);
-                                    setWordList(shortUniqueList);
-                                  }}
-                                />
-                                <label htmlFor="four-dice">4 dice</label>
-                              </div>
-
-                              <div>
-                                <input
-                                  type="radio"
-                                  id="five-dice"
-                                  name="num-dice"
-                                  value="5"
-                                  defaultChecked
-                                  onChange={(e) => {
-                                    setNumDice(e.target.value);
-                                    setWordList(longList);
-                                  }}
-                                />
-                                <label htmlFor="five-dice">5 dice</label>
-                              </div>
-                            </fieldset>
-
-                            <FormControl display="flex" alignItems="center">
-                              <FormLabel htmlFor="passphrase-separator" mb="0">
-                                Passphrase Separator
-                              </FormLabel>
-                              <Input
-                                type="text"
-                                name="separator"
-                                id="passphrase-separator"
-                                defaultValue="-"
-                                maxLength={2}
-                                htmlSize={2}
-                                width="auto"
-                                onChange={(e) =>
-                                  setPassphraseSeparator(e.target.value)
-                                }
-                              />
-                            </FormControl>
-                          </AccordionPanel>
-                        </AccordionItem>
-                      </Accordion>
                     </form>
                   </div>
                 </TabPanel>
