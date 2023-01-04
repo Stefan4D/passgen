@@ -167,11 +167,6 @@ export default function PasswordGenerator() {
     return entropy;
   }
 
-  // Testing only
-  //   const key = rollDice(numDice);
-  //   console.log(key); // prints a random 5-digit string
-  //   console.log(longList[key]);
-
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     generatePassword(
@@ -232,7 +227,7 @@ export default function PasswordGenerator() {
   return (
     <Center>
       <div id="generator-container">
-        <Card>
+        <Card size={"lg"}>
           <CardBody>
             <Tabs>
               <TabList>
@@ -246,14 +241,13 @@ export default function PasswordGenerator() {
 
               <TabPanels>
                 <TabPanel>
-                  <div className="passgen app-block">
+                  <div id="passgen-app-block">
                     <form onSubmit={handlePasswordSubmit}>
                       {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
                       <InputGroup size="lg">
                         <InputLeftAddon children={<LockIcon />} />
                         <Input
-                          minW={450}
-                          maxW={600}
+                          w={"100%"}
                           value={password}
                           readOnly
                           id="password-output"
@@ -309,7 +303,7 @@ export default function PasswordGenerator() {
                             Generate Password
                           </Button>
 
-                          <Accordion allowToggle minW={650}>
+                          <Accordion allowToggle w={"100%"}>
                             <AccordionItem>
                               <h2>
                                 <AccordionButton>
@@ -319,62 +313,71 @@ export default function PasswordGenerator() {
                                   <AccordionIcon />
                                 </AccordionButton>
                               </h2>
-                              <AccordionPanel pb={4}>
-                                <fieldset>
-                                  <legend>Character options:</legend>
-                                  <Grid
-                                    templateColumns="repeat(4, 1fr)"
-                                    gap={6}
-                                  >
-                                    <label htmlFor="caps">
-                                      Uppercase Letters
-                                    </label>
-                                    <input
-                                      type="checkbox"
-                                      name="caps"
-                                      id="caps"
-                                      defaultChecked
-                                      onChange={(e) =>
-                                        setIncludeCaps(e.target.checked)
-                                      }
-                                    />
-
-                                    <label htmlFor="lower">
-                                      Lowercase Letters
-                                    </label>
-                                    <input
-                                      type="checkbox"
-                                      name="lower"
-                                      id="lower"
-                                      defaultChecked
-                                      onChange={(e) =>
-                                        setIncludeLower(e.target.checked)
-                                      }
-                                    />
-
-                                    <label htmlFor="nums">Numbers</label>
-                                    <input
-                                      type="checkbox"
-                                      name="nums"
-                                      id="nums"
-                                      defaultChecked
-                                      onChange={(e) =>
-                                        setIncludeNumbers(e.target.checked)
-                                      }
-                                    />
-
-                                    <label htmlFor="special">
-                                      Special Characters
-                                    </label>
-                                    <input
-                                      type="checkbox"
-                                      name="special"
-                                      id="special"
-                                      defaultChecked
-                                      onChange={(e) =>
-                                        setIncludeSpecial(e.target.checked)
-                                      }
-                                    />
+                              <AccordionPanel pb={4} w="100%">
+                                <fieldset aria-label="Character options">
+                                  <Grid templateColumns="2" gap={2}>
+                                    <GridItem>
+                                      <label htmlFor="caps">
+                                        Uppercase Letters
+                                      </label>
+                                    </GridItem>
+                                    <GridItem colStart={2}>
+                                      <input
+                                        type="checkbox"
+                                        name="caps"
+                                        id="caps"
+                                        defaultChecked
+                                        onChange={(e) =>
+                                          setIncludeCaps(e.target.checked)
+                                        }
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <label htmlFor="lower">
+                                        Lowercase Letters
+                                      </label>
+                                    </GridItem>
+                                    <GridItem colStart={2}>
+                                      <input
+                                        type="checkbox"
+                                        name="lower"
+                                        id="lower"
+                                        defaultChecked
+                                        onChange={(e) =>
+                                          setIncludeLower(e.target.checked)
+                                        }
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <label htmlFor="nums">Numbers</label>
+                                    </GridItem>
+                                    <GridItem colStart={2}>
+                                      <input
+                                        type="checkbox"
+                                        name="nums"
+                                        id="nums"
+                                        defaultChecked
+                                        onChange={(e) =>
+                                          setIncludeNumbers(e.target.checked)
+                                        }
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <label htmlFor="special">
+                                        Special Characters
+                                      </label>
+                                    </GridItem>
+                                    <GridItem colStart={2}>
+                                      <input
+                                        type="checkbox"
+                                        name="special"
+                                        id="special"
+                                        defaultChecked
+                                        onChange={(e) =>
+                                          setIncludeSpecial(e.target.checked)
+                                        }
+                                      />
+                                    </GridItem>
                                   </Grid>
                                 </fieldset>
                               </AccordionPanel>
@@ -387,13 +390,12 @@ export default function PasswordGenerator() {
                 </TabPanel>
 
                 <TabPanel>
-                  <div className="passphrasegen app-block">
+                  <div id="passphrasegen-app-block">
                     <form onSubmit={handlePassphraseSubmit}>
                       <InputGroup size="lg">
                         <InputLeftAddon children={<LockIcon />} />
                         <Input
-                          minW={450}
-                          maxW={600}
+                          w={"100%"}
                           value={passphrase}
                           readOnly
                           id="passphrase-output"
@@ -439,13 +441,13 @@ export default function PasswordGenerator() {
                                 setPassphraseNumWords(e.target.value)
                               }
                             />
-                            <span>{passphraseNumWords} words</span>
+                            <span>{passphraseNumWords}</span>
                           </HStack>
                           <Button onClick={handlePassphraseSubmit}>
                             Generate Passphrase
                           </Button>
 
-                          <Accordion allowToggle minW={650}>
+                          <Accordion allowToggle w={"100%"}>
                             <AccordionItem>
                               <h2>
                                 <AccordionButton>
